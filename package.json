@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon ./index.js --ignore node_modules/ -e js,html,css"
   },
-  "author": "Anthony Gore <info@getjsdojo.com>",
+  "author": "Juan Marval <juan@retargetly.com>",
   "repository": {
     "type": "git",
     "url": "https://github.com/vuejsdevelopers/vuejs-poster-shop"
@@ -16,6 +16,7 @@
     "axios": "^0.15.2",
     "body-parser": "^1.15.2",
     "dotenv": "^2.0.0",
+    "eslint": "^4.19.1",
     "express": "^4.14.0",
     "querystring": "^0.2.0",
     "scrollmonitor": "^1.2.0",
