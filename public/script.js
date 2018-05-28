@@ -1,28 +1,73 @@
+var PRICE = 9.99;
+
 new Vue({
     el: '#app',
     data: {
         total: 50,
-        items: [{
-                id: 1,
-                title: 'Item 2'
-            },
-            {
-                id: 2,
-                title: 'Item 1'
-            },
-            {
-                id: 3,
-                title: 'Item 3'
-            }
-        ],
+        items: [],
+        newSearch: 'anime',
+        lastSeacrh: '',
+        loading: false,
+        price: PRICE,
         cart: []
     },
     methods: {
+        onSubmit: function () {
+            this.items = [];
+            this.lastSearch = this.newSearch;
+            this.loading = true;
+            this.$http
+                .get('/search/'.concat(this.newSearch))
+                .then(function (res) {
+                    this.loading = false;
+                    this.items = res.data;
+                })
+            ;
+        },
         addItem: function (index) {
-            this.total += 9.99;
+            this.total += PRICE;
             var item = this.items[index];
+            var found = false;
+            for (var i = 0; i < this.cart.length; i++) {
+                if(this.cart[i].id === item.id){
+                    found = true;
+                    this.cart[i].qty++;
+                    break;
+                }
+            }
 
-            this.cart.push(item);
+            if(!found) {
+                this.cart.push({
+                    id: item.id,
+                    title : item.title,
+                    qty: 1,
+                    price: PRICE
+                });
+            }
+        },
+        inc: function (item) {
+            item.qty++;
+            this.total += PRICE;
+        },
+        dec: function (item) {
+            item.qty--;
+            this.total -= PRICE;
+            if(item.qty <= 0) {
+                for (var i = 0; i < this.cart.length; i++) {
+                    if(this.cart[i].id === item.id){
+                        this.cart.splice(i, 1);
+                        break;
+                    }                    
+                }
+            }
         }
+    },
+    filters:{
+        currency: function (price) {
+            return '$'.concat(price.toFixed(2));
+        }
+    },
+    mounted: function() {
+        this.onSubmit();
     }
 });
